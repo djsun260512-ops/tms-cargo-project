@@ -1,0 +1,13 @@
+node_modules
+.pnpm-store
+.git
+.gitignore
+Dockerfile*
+**/dist
+**/.vite
+**/.cache
+**/.idea
+**/.vscode
+.DS_Store
+npm-debug.log*
+pnpm-debug.log*
