@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: open_trade
     ports:
-      - "5432:5432"
+      - "15432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -42,9 +42,9 @@ services:
     working_dir: /app
     volumes:
       - .:/app
-      - /app/node_modules
+      - server_node_modules:/app/node_modules
     command: >
-      sh -c "pnpm install && pnpm build:shared && pnpm --filter @open-trade/server db:migrate && pnpm --filter @open-trade/server db:seed && pnpm dev:server"
+      sh -c "pnpm install --frozen-lockfile && pnpm build:shared && pnpm --filter @open-trade/server db:migrate && pnpm --filter @open-trade/server db:seed && pnpm dev:server"
 
   web:
     build:
@@ -61,9 +61,9 @@ services:
     working_dir: /app
     volumes:
       - .:/app
-      - /app/node_modules
+      - web_node_modules:/app/node_modules
     command: >
-      sh -c "pnpm install && pnpm dev:web -- --host 0.0.0.0"
+      sh -c "pnpm install --frozen-lockfile && pnpm dev:web -- --host 0.0.0.0"
 
   admin:
     build:
@@ -80,9 +80,12 @@ services:
     working_dir: /app
     volumes:
       - .:/app
-      - /app/node_modules
+      - admin_node_modules:/app/node_modules
     command: >
-      sh -c "pnpm install && pnpm dev:admin -- --host 0.0.0.0"
+      sh -c "pnpm install --frozen-lockfile && pnpm dev:admin -- --host 0.0.0.0"
 
 volumes:
   postgres_data:
+  server_node_modules:
+  web_node_modules:
+  admin_node_modules:
