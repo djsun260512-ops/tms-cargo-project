@@ -22,7 +22,15 @@ async function request(url: string, options: RequestInit = {}): Promise<any> {
     throw new Error(message);
   }
 
-  if (!res.ok) throw new Error(data?.message || `HTTP ${res.status}`);
+  if (!res.ok) {
+    const error = new Error(data?.message || `HTTP ${res.status}`) as Error & {
+      response?: { data?: unknown };
+      status?: number;
+    };
+    error.status = res.status;
+    error.response = { data };
+    throw error;
+  }
   return data;
 }
 
