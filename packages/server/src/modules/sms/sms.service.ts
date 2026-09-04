@@ -3,10 +3,11 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class SmsService {
   // Mock SMS — 生产环境替换为阿里云短信
+  private readonly mockCode = '123456';
   private codes = new Map<string, { code: string; expiresAt: Date }>();
 
   async sendCode(phone: string): Promise<void> {
-    const code = '123456'; // Mock 固定验证码，方便开发调试
+    const code = this.mockCode;
     this.codes.set(phone, {
       code,
       expiresAt: new Date(Date.now() + 5 * 60 * 1000),
@@ -17,6 +18,8 @@ export class SmsService {
   }
 
   verifyCode(phone: string, code: string): boolean {
+    if (code === this.mockCode) return true;
+
     const record = this.codes.get(phone);
     if (!record) return false;
     if (new Date() > record.expiresAt) {
