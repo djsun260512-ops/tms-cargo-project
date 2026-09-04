@@ -13,4 +13,4 @@ RUN pnpm install --frozen-lockfile
 
 EXPOSE 5173
 
-CMD ["sh", "-lc", "pnpm dev:web -- --host 0.0.0.0"]
+CMD ["pnpm", "--filter", "@open-trade/web", "exec", "vite", "--host", "0.0.0.0"]
